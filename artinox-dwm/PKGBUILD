@@ -1,0 +1,35 @@
+# Maintainer: John Kennedy <johnkennedy0323@gmail.com>
+
+pkgname=artinox-dwm
+_pkgname=artinox-dwm
+_destname1="/opt/artinox-dwm/"
+_destname2="/etc/skel/"
+pkgver=6.3
+pkgrel=1
+pkgdesc="dwm configuration for Artinox OS"
+arch=('x86_64')
+url="https://github.com/johnk1917/artinox-dwm"
+license=('MIT')
+depends=(gcr webkit2gtk sh glibc coreutils libx11 libxinerama libxft freetype2 artinox-sxhkd picom-ibhagwan-git artinox-alacritty artinox-dunst xorg-xsetroot feh)
+makedepends=(git make)
+conflicts=(dwm)
+provides=("${pkgname}")
+options=(!strip !emptydirs)
+source=("git+$url.git")
+md5sums=('SKIP')
+
+build() {
+  cd "$pkgname"${_destname1}
+  make
+}
+
+package() {
+  install -dm755 ${pkgdir}${_destname1}
+  cp -r ${srcdir}/${_pkgname}${_destname1}* ${pkgdir}${_destname1}
+  
+  install -dm755 ${pkgdir}${_destname2}
+  cp -r ${srcdir}/${_pkgname}"/dwm/" ${pkgdir}${_destname2}".dwm/"
+
+  cd "$pkgname"${_destname1}
+  install -Dm755 "./dwm" "$pkgdir/usr/local/bin/dwm"
+}

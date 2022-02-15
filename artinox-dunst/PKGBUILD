@@ -1,0 +1,29 @@
+# Maintainer: John Kennedy <johnkennedy0323@gmail.com>
+pkgname=artinox-dunst
+_pkgname=artinox-dunst
+_destname1="/etc/skel/"
+pkgver=r1.38c29a3
+pkgrel=1
+pkgdesc="Dunst configuration for Artinox"
+arch=('x86_64')
+url="https://github.com/johnk1917/artinox-dunst"
+license=('MIT')
+depends=('dunst')
+makedepends=('git')
+provides=("${pkgname}")
+options=(!strip !emptydirs)
+source=(${_pkgname}::"git+https://github.com/johnk1917/artinox-dunst.git")
+sha256sums=('SKIP')
+
+package() {
+# install is a command which does essentially the same thing as cp but, it helps pacman be aware of what to remove if we uninstall this package.
+    install -dm755 ${pkgdir}${_destname1}
+    cp -lr ${srcdir}/${_pkgname}${_destname1}.* ${pkgdir}${_destname1}
+    rm -rf ${pkgdir}${_destname1}/"skel"
+    # fixing a issue that i don't know how to solve in cp ^^^
+}
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
